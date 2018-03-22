@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<root>
+    <package name="com.example.offHeap">
+        <class name="Application" qualified="com.example.offHeap.Application" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <interface qualified="com.datatorrent.api.StreamingApplication"/>
+            <constructor name="Application" signature="()" qualified="com.example.offHeap.Application" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="populateDAG" signature="(com.datatorrent.api.DAG, org.apache.hadoop.conf.Configuration)" qualified="com.example.offHeap.Application.populateDAG" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="dag">
+                    <type qualified="com.datatorrent.api.DAG"/>
+                </parameter>
+                <parameter name="conf">
+                    <type qualified="org.apache.hadoop.conf.Configuration"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <annotation name="ApplicationAnnotation" qualified="com.datatorrent.api.annotation.ApplicationAnnotation">
+                <argument name="name" primitive="false" array="false">
+                    <type qualified="java.lang.String"/>
+                    <value>Offheap</value>
+                </argument>
+            </annotation>
+        </class>
+        <class name="Deduper" qualified="com.example.offHeap.Deduper" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="com.datatorrent.common.util.BaseOperator"/>
+            <constructor name="Deduper" signature="()" qualified="com.example.offHeap.Deduper" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="dedup" signature="(com.example.offHeap.TransactionSchema)" qualified="com.example.offHeap.Deduper.dedup" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="transaction">
+                    <type qualified="com.example.offHeap.TransactionSchema"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="setup" signature="(com.datatorrent.api.Context.OperatorContext)" qualified="com.example.offHeap.Deduper.setup" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="context">
+                    <type qualified="com.datatorrent.api.Context.OperatorContext"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <field name="unique" qualified="com.example.offHeap.Deduper.unique" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultOutputPort">
+                    <generic qualified="java.lang.Integer"/>
+                </type>
+            </field>
+            <field name="duplicate" qualified="com.example.offHeap.Deduper.duplicate" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultOutputPort">
+                    <generic qualified="java.lang.Integer"/>
+                </type>
+            </field>
+            <field name="input" qualified="com.example.offHeap.Deduper.input" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultInputPort">
+                    <generic qualified="com.example.offHeap.TransactionSchema"/>
+                </type>
+            </field>
+        </class>
+        <class name="RandomNumberGenerator" qualified="com.example.offHeap.RandomNumberGenerator" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <comment>This is a simple operator that emits random number.</comment>
+            <class qualified="com.datatorrent.common.util.BaseOperator"/>
+            <interface qualified="com.datatorrent.api.InputOperator"/>
+            <constructor name="RandomNumberGenerator" signature="()" qualified="com.example.offHeap.RandomNumberGenerator" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="beginWindow" signature="(long)" qualified="com.example.offHeap.RandomNumberGenerator.beginWindow" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="windowId">
+                    <type qualified="long"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="emitTuples" signature="()" qualified="com.example.offHeap.RandomNumberGenerator.emitTuples" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <method name="getNumTuples" signature="()" qualified="com.example.offHeap.RandomNumberGenerator.getNumTuples" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="int"/>
+            </method>
+            <method name="setNumTuples" signature="(int)" qualified="com.example.offHeap.RandomNumberGenerator.setNumTuples" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <comment>Sets the number of tuples to be emitted every window.</comment>
+                <tag name="@param" text="numTuples number of tuples"/>
+                <parameter name="numTuples">
+                    <type qualified="int"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <field name="out" qualified="com.example.offHeap.RandomNumberGenerator.out" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultOutputPort">
+                    <generic qualified="com.example.offHeap.TransactionSchema"/>
+                </type>
+            </field>
+        </class>
+        <class name="GroupByOperator" qualified="com.example.offHeap.GroupByOperator" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="com.datatorrent.common.util.BaseOperator"/>
+            <constructor name="GroupByOperator" signature="()" qualified="com.example.offHeap.GroupByOperator" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <method name="beginWindow" signature="(long)" qualified="com.example.offHeap.GroupByOperator.beginWindow" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="windowId">
+                    <type qualified="long"/>
+                </parameter>
+                <return qualified="void"/>
+                <annotation name="Override" qualified="java.lang.Override"/>
+            </method>
+            <field name="unique" qualified="com.example.offHeap.GroupByOperator.unique" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultOutputPort">
+                    <generic qualified="java.lang.Integer"/>
+                </type>
+            </field>
+            <field name="input" qualified="com.example.offHeap.GroupByOperator.input" scope="public" volatile="false" transient="true" static="false" final="true">
+                <type qualified="com.datatorrent.api.DefaultInputPort">
+                    <generic qualified="com.example.offHeap.TransactionSchema"/>
+                </type>
+            </field>
+        </class>
+        <class name="TransactionSchema" qualified="com.example.offHeap.TransactionSchema" scope="public" abstract="false" error="false" exception="false" externalizable="false" included="true" serializable="false">
+            <class qualified="java.lang.Object"/>
+            <constructor name="TransactionSchema" signature="()" qualified="com.example.offHeap.TransactionSchema" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false"/>
+            <constructor name="TransactionSchema" signature="(int, long)" qualified="com.example.offHeap.TransactionSchema" scope="public" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="int"/>
+                </parameter>
+                <parameter name="price">
+                    <type qualified="long"/>
+                </parameter>
+            </constructor>
+            <method name="getId" signature="()" qualified="com.example.offHeap.TransactionSchema.getId" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="int"/>
+            </method>
+            <method name="setId" signature="(int)" qualified="com.example.offHeap.TransactionSchema.setId" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="id">
+                    <type qualified="int"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+            <method name="getPrice" signature="()" qualified="com.example.offHeap.TransactionSchema.getPrice" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <return qualified="long"/>
+            </method>
+            <method name="setPrice" signature="(long)" qualified="com.example.offHeap.TransactionSchema.setPrice" scope="public" abstract="false" final="false" included="true" native="false" synchronized="false" static="false" varArgs="false">
+                <parameter name="price">
+                    <type qualified="long"/>
+                </parameter>
+                <return qualified="void"/>
+            </method>
+        </class>
+    </package>
+</root>
